@@ -26,7 +26,7 @@ for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodi
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            passwd="",
+            passwd="yourpassword",
             database="test"
         )
 
