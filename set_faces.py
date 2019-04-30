@@ -4,50 +4,42 @@ import json
 import mysql.connector
 import pickle
 
-# load image
-load_image = face_recognition.load_image_file('./img/known/Bill Gates.jpg')
+# Mysql config
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="",
+    database="test"
+)
 
-# find face locations 
-face_locations = face_recognition.face_locations(load_image)
+#################################################################################
+load_image      = face_recognition.load_image_file('./img/unknown/bill-gates-4.jpg')
+#################################################################################
+face_locations  = face_recognition.face_locations(load_image)
+face_encoding   = face_recognition.face_encodings(load_image, face_locations)
 
-# find face encoding
-face_encoding = face_recognition.face_encodings(load_image, face_locations)
+mycursor = mydb.cursor()
 
+mycursor.execute("SELECT image, name FROM face_recog")
+rows = mycursor.fetchall()
 
-for (top, right, bottom, left), face_encoding in zip(face_locations, face_encoding):
-    # See if the face is a match for the known face(s)
-    matches = face_recognition.compare_faces(face_encoding, face_encoding1)
+## Get the results
+for each in rows:
+    face_data = pickle.loads(each[0])
 
+    for (top, right, bottom, left), face_encoding in zip(face_locations, face_encoding):
+        matches = face_recognition.compare_faces([face_encoding], face_data)
 
-    # If a match was found in known_face_encodings, just use the first one.
-    if True in matches:
-        # print('It works')
-        # face_pickled_data = pickle.dumps(face_encoding)
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            passwd="yourpassword",
-            database="test"
-        )
-
-        mycursor = mydb.cursor()
-
-        # sql = "INSERT INTO face_recog (image,name) VALUES (%s, %s)"
-        # val = (face_pickled_data, "name")
-        # mycursor.execute(sql, val)
-
-        # mydb.commit()
-
-        mycursor.execute("SELECT image FROM face_recog WHERE name = 'name1'")
-        rows = mycursor.fetchall()
-
-        ## Get the results
-        for each in rows:
-            ## The result is also in a tuple
-            for face_stored_pickled_data in each:
-                face_data = pickle.loads(face_stored_pickled_data)
-                print(face_data)
-
-    else:
-        print('Doesnt work')
-#print(face_encoding1)
+        if True in matches:
+            print(f'Face matches with {each[1]}')
+            break
+            
+        else:
+            print('Face does not match')
+        #     name = input('Enter the name of person: ')
+        #     face_pickled_data = pickle.dumps(face_encoding)
+        #     mycursor = mydb.cursor()
+        #     sql = "INSERT INTO face_recog (image,name) VALUES (%s, %s)"
+        #     val = (face_pickled_data, name)
+        #     mycursor.execute(sql, val)
+        #     mydb.commit()

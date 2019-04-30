@@ -1,23 +1,45 @@
 import face_recognition
-from PIL import Image, ImageDraw
 import requests
 import json
-import base64
+import mysql.connector
+import pickle
 
-url = "http://192.168.43.169:5000/api/tooling/tools/product_insert"
+# load image
+load_image = face_recognition.load_image_file('./img/known/Bill Gates.jpg')
+load_image1 = face_recognition.load_image_file('./img/unknown/bill-gates-4.jpg')
 
-def getImages(images):
-    payload = {'image': f"{images}"}
-    headers = {'content-type': 'application/json'}
-    requests.post(url = 'http://192.168.43.169:5000/api/tooling/tools/face_recog', data = json.dumps(payload), headers=headers)
+# find face locations 
+face_locations = face_recognition.face_locations(load_image)
+face_locations1 = face_recognition.face_locations(load_image1)
 
-def getContent(data):
-    print(data)
+# find face encoding
+face_encoding = face_recognition.face_encodings(load_image, face_locations)
+face_encoding1 = face_recognition.face_encodings(load_image1, face_locations1)
 
-with open('./img/known/Bill Gates.jpg', "rb") as image_file:
-    image = base64.b64encode(image_file.read())
 
-# r = requests.get(url)
-# print (r.status_code)
+for (top, right, bottom, left), face_encoding in zip(face_locations, face_encoding1):
+    # See if the face is a match for the known face(s)
+    matches = face_recognition.compare_faces(face_encoding, face_encoding1)
 
-getImages(image)
+
+    # If a match was found in known_face_encodings, just use the first one.
+    if True in matches:
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            passwd="",
+            database="test"
+        )
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute("SELECT image, name FROM face_recog")
+        rows = mycursor.fetchall()
+
+        ## Get the results
+        for each in rows:
+            face_data = pickle.loads(each[0])
+            print(face_data)
+                
+    else:
+        print('Doesnt work')
