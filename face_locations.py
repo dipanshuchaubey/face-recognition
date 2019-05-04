@@ -1,8 +1,8 @@
 import face_recognition
 import requests
 import json
-import mysql.connector
 import pickle
+from auth import db
 
 # load image
 load_image = face_recognition.load_image_file('./img/known/Bill Gates.jpg')
@@ -34,12 +34,8 @@ for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodi
     if True in matches:
         # print('Sahi khel gya BC')
         # face_pickled_data = pickle.dumps(face_encoding)
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            passwd="",
-            database="test"
-        )
+        
+        mydb = db.databaseConnection()
 
         mycursor = mydb.cursor()
 

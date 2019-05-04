@@ -1,16 +1,11 @@
 import face_recognition
 import requests
 import json
-import mysql.connector
+from auth import db
 import pickle
 
 # Mysql config
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="",
-    database="test"
-)
+mydb = db.databaseConnection()
 
 #################################################################################
 load_image      = face_recognition.load_image_file('./img/unknown/bill-gates-4.jpg')

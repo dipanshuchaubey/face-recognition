@@ -1,7 +1,7 @@
 import face_recognition
 import requests
 import json
-import mysql.connector
+from auth import db
 import pickle
 
 # load image
@@ -24,12 +24,7 @@ for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodi
 
     # If a match was found in known_face_encodings, just use the first one.
     if True in matches:
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            passwd="",
-            database="test"
-        )
+        mydb = db.databaseConnection()
 
         mycursor = mydb.cursor()
 

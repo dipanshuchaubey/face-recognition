@@ -2,10 +2,10 @@ import face_recognition
 from PIL import Image, ImageDraw
 
 
-obama_image = face_recognition.load_image_file("./img/known/Barack Obama.jpg")
+obama_image = face_recognition.load_image_file("./img/known/Bill Gates.jpg")
 obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
 
-biden_image = face_recognition.load_image_file("./img/known/Bill Gates.jpg")
+biden_image = face_recognition.load_image_file("./img/groups/Dipanshu.jpeg")
 biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
 
 
@@ -14,12 +14,12 @@ known_face_encodings = [
     biden_face_encoding
 ]
 known_face_names = [
-    "Barack Obama",
-    "Joe Biden"
+    "Bill Gates",
+    "Dipanshu Chaubey"
 ]
 
 # Load an image with an unknown face
-unknown_image = face_recognition.load_image_file("./img/groups/team5.jpg")
+unknown_image = face_recognition.load_image_file("./img/groups/team8.jpg")
 
 # Find all the faces and face encodings in the unknown image
 face_locations = face_recognition.face_locations(unknown_image)
