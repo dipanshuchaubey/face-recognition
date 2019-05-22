@@ -2,39 +2,39 @@ import face_recognition
 import requests
 import json
 from auth import db
+from identify import findface
 import pickle
 
-# Mysql config
-mydb = db.databaseConnection()
+# load image
+load_image      = face_recognition.load_image_file('./img/unknown/obama.jpeg')
 
-#################################################################################
-load_image      = face_recognition.load_image_file('./img/unknown/bill-gates-4.jpg')
-#################################################################################
+# find face locations
 face_locations  = face_recognition.face_locations(load_image)
+
+# get face encodings
 face_encoding   = face_recognition.face_encodings(load_image, face_locations)
 
-mycursor = mydb.cursor()
+# search for exsisting faces
 
-mycursor.execute("SELECT image, name FROM face_recog")
-rows = mycursor.fetchall()
+exsisting_face_name = findface.findFace(face_locations, face_encoding)
 
-## Get the results
-for each in rows:
-    face_data = pickle.loads(each[0])
+if exsisting_face_name:
+    print("FACE FOUND")
+    print(f'Face matches with {exsisting_face_name}')
+else:
+    print("FACE NOT FOUND")
+    # input name
+    name = input('Enter the name of person: ')
 
-    for (top, right, bottom, left), face_encoding in zip(face_locations, face_encoding):
-        matches = face_recognition.compare_faces([face_encoding], face_data)
+    # convert name into BLOB string
+    face_pickled_data = pickle.dumps(face_encoding)
 
-        if True in matches:
-            print(f'Face matches with {each[1]}')
-            break
-            
-        else:
-            print('Face does not match')
-            # name = input('Enter the name of person: ')
-            # face_pickled_data = pickle.dumps(face_encoding)
-            # mycursor = mydb.cursor()
-            # sql = "INSERT INTO face_recog (image,name) VALUES (%s, %s)"
-            # val = (face_pickled_data, name)
-            # mycursor.execute(sql, val)
-            # mydb.commit()
+    # setup database connection
+    mydb = db.databaseConnection()
+    mycursor = mydb.cursor()
+
+    # mysql query
+    sql = "INSERT INTO face_recog (image,name) VALUES (%s, %s)"
+    val = (face_pickled_data, name)
+    mycursor.execute(sql, val)
+    mydb.commit()
