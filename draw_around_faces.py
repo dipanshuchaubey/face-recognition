@@ -1,37 +1,35 @@
 import face_recognition
 from PIL import Image, ImageDraw
 
-
-obama_image = face_recognition.load_image_file("./img/known/Bill Gates.jpg")
-obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
-
-biden_image = face_recognition.load_image_file("./img/groups/Dipanshu.jpeg")
-biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
+# fetch all face from the database
 
 
+# Set data array
 known_face_encodings = [
-    obama_face_encoding,
-    biden_face_encoding
+    face_encoding1,
+    face_encoding2
 ]
+
 known_face_names = [
-    "Bill Gates",
-    "Dipanshu Chaubey"
+    "User1",
+    "User2"
 ]
 
 # Load an image with an unknown face
 unknown_image = face_recognition.load_image_file("./img/groups/bill-steve-elon.jpg")
 
-# Find all the faces and face encodings in the unknown image
+# find face location
 face_locations = face_recognition.face_locations(unknown_image)
+
+# get face encodings
 face_encodings = face_recognition.face_encodings(unknown_image, face_locations)
 
-# Convert the image to a PIL-format image so that we can draw on top of it with the Pillow library
-# See http://pillow.readthedocs.io/ for more about PIL/Pillow
+# Convert the image to a PIL-format image so that we can draw on top of it
 pil_image = Image.fromarray(unknown_image)
+
 # Create a Pillow ImageDraw Draw instance to draw with
 draw = ImageDraw.Draw(pil_image)
 
-# Loop through each face found in the unknown image
 for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
     # See if the face is a match for the known face(s)
     matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
@@ -56,4 +54,4 @@ del draw
 
 pil_image.show()
 
-pil_image.save("image_with_boxes.jpg")
+# pil_image.save("image_with_boxes.jpg")

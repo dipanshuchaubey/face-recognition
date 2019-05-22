@@ -5,7 +5,7 @@ from auth import db
 import pickle
 
 # load image
-load_image = face_recognition.load_image_file('./img/unknown/gates_lookalike.jpg')
+load_image = face_recognition.load_image_file('./img/groups/Dipanshu.jpeg')
 
 # find face locations 
 face_locations = face_recognition.face_locations(load_image)
@@ -33,11 +33,10 @@ for each in rows:
 
     for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
         # See if the face is a match for the known face(s)
-        matches = face_recognition.compare_faces([known_face_encodings], face_encoding)
+        matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
 
         if True in matches:
-            #print("HUM JEET GAYE")
-            print(face_name)
+            print(f'Face matches with {face_name}')
             break
 
         else:

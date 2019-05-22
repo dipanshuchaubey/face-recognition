@@ -6,7 +6,7 @@ from identify import findface
 import pickle
 
 # load image
-load_image      = face_recognition.load_image_file('./img/unknown/obama.jpeg')
+load_image      = face_recognition.load_image_file('./img/groups/Dipanshu.jpeg')
 
 # find face locations
 face_locations  = face_recognition.face_locations(load_image)
@@ -15,7 +15,6 @@ face_locations  = face_recognition.face_locations(load_image)
 face_encoding   = face_recognition.face_encodings(load_image, face_locations)
 
 # search for exsisting faces
-
 exsisting_face_name = findface.findFace(face_locations, face_encoding)
 
 if exsisting_face_name:
