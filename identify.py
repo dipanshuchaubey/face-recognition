@@ -5,36 +5,42 @@ from auth import db
 import pickle
 
 # load image
-load_image = face_recognition.load_image_file('./img/known/Bill Gates.jpg')
-load_image1 = face_recognition.load_image_file('./img/unknown/bill-gates-4.jpg')
+load_image = face_recognition.load_image_file('./img/unknown/gates_lookalike.jpg')
 
 # find face locations 
 face_locations = face_recognition.face_locations(load_image)
-face_locations1 = face_recognition.face_locations(load_image1)
 
 # find face encoding
-face_encoding = face_recognition.face_encodings(load_image, face_locations)
-face_encoding1 = face_recognition.face_encodings(load_image1, face_locations1)
+face_encodings = face_recognition.face_encodings(load_image, face_locations)
 
+# setup database connection
+mydb = db.databaseConnection()
+mycursor = mydb.cursor()
 
-for (top, right, bottom, left), face_encoding in zip(face_locations, face_encoding1):
-    # See if the face is a match for the known face(s)
-    matches = face_recognition.compare_faces(face_encoding, face_encoding1)
+# convert face encoding into BLOB string
+face_pickled_data = pickle.dumps(face_encodings)
 
+# mysql query
+mycursor.execute("SELECT image, name FROM face_recog")
 
-    # If a match was found in known_face_encodings, just use the first one.
-    if True in matches:
-        mydb = db.databaseConnection()
+# Get the results
+rows = mycursor.fetchall()
 
-        mycursor = mydb.cursor()
+for each in rows:
 
-        mycursor.execute("SELECT image, name FROM face_recog")
-        rows = mycursor.fetchall()
+    known_face_encodings = pickle.loads(each[0])
+    face_name = each[1]
 
-        ## Get the results
-        for each in rows:
-            face_data = pickle.loads(each[0])
-            print(face_data)
-                
-    else:
-        print('Doesnt work')
+    for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+        # See if the face is a match for the known face(s)
+        matches = face_recognition.compare_faces([known_face_encodings], face_encoding)
+
+        if True in matches:
+            #print("HUM JEET GAYE")
+            print(face_name)
+            break
+
+        else:
+            break
+                        
+        

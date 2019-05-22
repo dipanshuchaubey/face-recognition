@@ -31,10 +31,10 @@ for each in rows:
             
         else:
             print('Face does not match')
-        #     name = input('Enter the name of person: ')
-        #     face_pickled_data = pickle.dumps(face_encoding)
-        #     mycursor = mydb.cursor()
-        #     sql = "INSERT INTO face_recog (image,name) VALUES (%s, %s)"
-        #     val = (face_pickled_data, name)
-        #     mycursor.execute(sql, val)
-        #     mydb.commit()
+            # name = input('Enter the name of person: ')
+            # face_pickled_data = pickle.dumps(face_encoding)
+            # mycursor = mydb.cursor()
+            # sql = "INSERT INTO face_recog (image,name) VALUES (%s, %s)"
+            # val = (face_pickled_data, name)
+            # mycursor.execute(sql, val)
+            # mydb.commit()
