@@ -1,19 +1,12 @@
 import face_recognition
 from PIL import Image, ImageDraw
+from fetch import fetchfaces
 
 # fetch all face from the database
+known_face_encodings, known_face_names = fetchfaces.fetchAllFaces()
 
-
-# Set data array
-known_face_encodings = [
-    face_encoding1,
-    face_encoding2
-]
-
-known_face_names = [
-    "User1",
-    "User2"
-]
+print(known_face_encodings)
+print(known_face_names)
 
 # Load an image with an unknown face
 unknown_image = face_recognition.load_image_file("./img/groups/bill-steve-elon.jpg")
