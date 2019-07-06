@@ -4,14 +4,13 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "<2.0.0"
+autopep8 = "*"
 
 [packages]
 face-recognition = "*"
+mysql-connector-python = "*"
 requests = "*"
-mysql = "*"
-mysql-connector = "*"
-pickle = "*"
-pickle-mixin = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "2.7"
